@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 interface IUser {
   username: string;
   fullName: string;
-  avatar: string;
   score: number;
   createdAt: Date;
   updatedAt: Date;
@@ -21,9 +20,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    },
-    avatar: {
-      type: String,
     },
     score: {
       type: Number,
