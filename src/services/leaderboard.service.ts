@@ -14,9 +14,13 @@ export const registerUserService = async (
 
 export const updateScoreService = async (userId: string, points: number) => {
   // find the user and update the score
-  const updatedUser = await User.findByIdAndUpdate(userId, {
-    $inc: { score: points },
-  });
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $inc: { score: points },
+    },
+    { new: true },
+  );
   // check if the user exists or not, if not then return an error
   if (!updatedUser) {
     throw new Error("User Not Found!");
