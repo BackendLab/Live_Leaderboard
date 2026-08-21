@@ -7,7 +7,7 @@ export const registerUserService = async (
 ) => {
   const user = await User.create({ username, fullName });
 
-  await redis.zadd("leaderborad", 0, user._id.toString());
+  await redis.zadd("leaderboard", 0, user._id.toString());
 
   return user;
 };
