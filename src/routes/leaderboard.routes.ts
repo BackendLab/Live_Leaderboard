@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/leaderboard.controller";
+import {
+  registerUser,
+  updateScore,
+} from "../controllers/leaderboard.controller";
 
 const router = Router();
 
 router.post("/register", registerUser);
+
+router.patch("/score:id", updateScore);
 
 export default router;

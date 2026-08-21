@@ -1,5 +1,8 @@
 import type { Request, Response } from "express";
-import { registerUserService } from "../services/leaderboard.service";
+import {
+  registerUserService,
+  updateScoreService,
+} from "../services/leaderboard.service";
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -16,5 +19,27 @@ export const registerUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Failed to create user" });
+  }
+};
+
+export const updateScore = async (req: Request, res: Response) => {
+  try {
+    // get the score from body and user id from params
+    const { points } = req.body;
+    const { userId } = req.params;
+    // check both exists or not
+    if (!userId || points === undefined) {
+      return res
+        .status(400)
+        .json({ message: "UserId and points are required" });
+    }
+    // call the service
+    const updatedUser = await updateScoreService(userId.toString(), points);
+    // give back the response
+    return res
+      .status(200)
+      .json({ message: "Score updated successfully!", updatedUser });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to update the score" });
   }
 };
