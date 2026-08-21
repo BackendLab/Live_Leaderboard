@@ -8,6 +8,6 @@ const router = Router();
 
 router.post("/register", registerUser);
 
-router.patch("/score:id", updateScore);
+router.patch("/score/:userId", updateScore);
 
 export default router;
