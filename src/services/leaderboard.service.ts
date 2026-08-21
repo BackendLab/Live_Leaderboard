@@ -11,3 +11,18 @@ export const registerUserService = async (
 
   return user;
 };
+
+export const updateScoreService = async (userId: string, points: number) => {
+  // find the user and update the score
+  const updatedUser = await User.findByIdAndUpdate(userId, {
+    $inc: { score: points },
+  });
+  // check if the user exists or not, if not then return an error
+  if (!updatedUser) {
+    throw new Error("User Not Found!");
+  }
+  // update the redis
+  await redis.zincrby("leaderboard", points, userId);
+  // return the updated user
+  return updatedUser;
+};
