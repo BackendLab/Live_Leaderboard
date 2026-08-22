@@ -1,8 +1,26 @@
 import type { Request, Response } from "express";
 import {
+  getLeaderboardService,
   registerUserService,
   updateScoreService,
 } from "../services/leaderboard.service";
+
+export const getLeaderBoard = async (req: Request, res: Response) => {
+  try {
+    // get the user ID from query
+    const { userId } = req.query;
+    // call the service
+    const leaderboard = await getLeaderboardService(userId?.toString());
+    // give back the response to the user
+    return res
+      .status(200)
+      .json({ message: "Fetched Leaderboard!", leaderboard });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch the leaderboard!" });
+  }
+};
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
