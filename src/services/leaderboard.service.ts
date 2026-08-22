@@ -4,6 +4,7 @@ import { User } from "../models/user.model";
 type LeaderboardEntry = {
   userId: string | undefined;
   score: number;
+  rank: number;
   isCurrentUser?: boolean;
 };
 
@@ -18,9 +19,11 @@ export const getLeaderboardService = async (userId: string | undefined) => {
   // convert the string into json objects with pairs
   const top10: LeaderboardEntry[] = [];
   for (let i = 0; i < rawLearderboard.length; i += 2) {
+    const rank = i / 2 + 1;
     top10.push({
       userId: rawLearderboard[i],
       score: Number(rawLearderboard[i + 1]),
+      rank,
     });
   }
   // get the own entry
@@ -71,4 +74,14 @@ export const updateScoreService = async (userId: string, points: number) => {
   await redis.zincrby("leaderboard", points, userId);
   // return the updated user
   return updatedUser;
+};
+
+export const rebuildLeaderboardFromMongo = async () => {
+  const users = await User.find({}, { score: 1 });
+
+  for (const user of users) {
+    await redis.zadd("leaderboard", user.score, user._id.toString());
+  }
+
+  console.log(`Rebuilt leaderboard with ${users.length} users`);
 };
